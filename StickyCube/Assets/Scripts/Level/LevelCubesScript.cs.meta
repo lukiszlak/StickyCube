@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6160e9691ae36054aad016c34b8162d3
+timeCreated: 1543960725
+licenseType: Free
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - floor: {fileID: 1704401094864912, guid: 428c10540a7b00748acf4cf3fd50fe2c, type: 2}
+  - background: {instanceID: 0}
+  - floorNew: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
