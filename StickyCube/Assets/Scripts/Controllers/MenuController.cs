@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -13,8 +14,13 @@ public class MenuController : MonoBehaviour {
 
     private void Awake()
     {
-        levelDisplay = GameObject.Find("LevelName").GetComponent<Text>();
-        levelDisplay.text = SceneManager.GetActiveScene().name;
+        if (SceneManager.GetActiveScene().name != "MainMenu")
+        {
+            levelDisplay = GameObject.Find("LevelName").GetComponent<Text>();
+            levelDisplay.text = SceneManager.GetActiveScene().name; 
+        }
+        // For parsing NextLevel name with dots not commas
+        CultureInfo.CurrentCulture = new CultureInfo("en-US", false);
     }
     public void NewGame()
     {
@@ -30,7 +36,6 @@ public class MenuController : MonoBehaviour {
     {
         //TODO fix this hax
         level = float.Parse(SceneManager.GetActiveScene().name);
-        print(level);
         if (level < 1.12f || (level > 2 && level < 2.10))
         {
             level += 0.01f;
@@ -45,14 +50,13 @@ public class MenuController : MonoBehaviour {
             level = 1.12f;
         }
 
-        levelName = (level + "");
+        levelName = level.ToString();
 
         if (level == 1.1f || level == 2.1f)
         {
             levelName += "0";
         }
 
-        print(levelName);
         Time.timeScale = 1;
         SceneManager.LoadScene(levelName);
     }
@@ -77,7 +81,6 @@ public class MenuController : MonoBehaviour {
     {
         SceneManager.LoadScene("MainMenu");
     }
-
 
     //Temp Functions to delete
 

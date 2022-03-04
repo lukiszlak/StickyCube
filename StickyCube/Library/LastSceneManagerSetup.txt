@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Levels/temp/2PlayersGameMode/TwoPC_1.unity
-  isLoaded: 1
-  isActive: 1

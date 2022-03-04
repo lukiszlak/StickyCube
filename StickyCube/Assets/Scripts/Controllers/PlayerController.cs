@@ -31,28 +31,22 @@ public class PlayerController : MonoBehaviour {
         if (lastMove == "W")
         {
             MoveToPosition("S");
-            Debug.Log("COFAM");
         }
         else if (lastMove == "S")
         {
             MoveToPosition("W");
-            Debug.Log("COFAM");
         }
         else if (lastMove == "A")
         {
             MoveToPosition("D");
-            Debug.Log("COFAM");
         }
         else if (lastMove == "D")
         {
             MoveToPosition("A");
-            Debug.Log("COFAM");
         }
         //TODO Dodaj prawidłowy dźwięk przy anulowaniu
         failSound.Play();
     }
-
-
 
     public void ButtonSearch()
     {
@@ -72,7 +66,14 @@ public class PlayerController : MonoBehaviour {
                 }
             }
         }
-       
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.tag == "Background")
+        {
+            MoveRevert();
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -81,8 +82,6 @@ public class PlayerController : MonoBehaviour {
         {
             puzzleController.GetComponent<PuzzlesController>().MoveBlue(false);
         }
-
-
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -130,7 +129,6 @@ public class PlayerController : MonoBehaviour {
                         if (hit.collider.CompareTag("Respawn"))
                         { 
                             MoveRevert();
-                            Debug.Log("Powinienem spaść");
                             return;
                         }
                     }

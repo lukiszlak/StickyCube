@@ -24,7 +24,6 @@ public class CubeAdder : MonoBehaviour
 		{
 			foreach (Transform child in transform)
 			{
-				print("zmieniam");
 				if (child.CompareTag("Background"))
 				{
 					child.tag = "Player";
