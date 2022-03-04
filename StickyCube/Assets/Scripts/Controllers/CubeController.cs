@@ -65,6 +65,25 @@ public class CubeController : MonoBehaviour {
             DetachBox();
         }
 
+        // TODO change it to something more sensible
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("W");
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("S");
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("A");
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("D");
+        }
+        //
+
         if (Input.anyKeyDown)
         {
             Move(Input.inputString);
