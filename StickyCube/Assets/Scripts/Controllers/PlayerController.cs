@@ -17,13 +17,23 @@ public class PlayerController : MonoBehaviour {
     public AudioSource failSound; //
     private RaycastHit hit;
     private Bounds bounds;
+    private List<Transform> collidingObjects;
 
     private void Start()
     {
+        collidingObjects = new List<Transform>();
         pivot_1 = gameObject.transform.Find("pivot1").gameObject;
         pivot_2 = gameObject.transform.Find("pivot2").gameObject;
         puzzleController = GameObject.Find("Background");
         BoundsGenerate();
+    }
+
+    private void Update()
+    {
+        if (collidingObjects.Count > 0)
+        {
+            AddCubes();
+        }
     }
 
     public void MoveRevert()
@@ -70,10 +80,52 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.tag == "Background")
+        collidingObjects.Add(other.transform);
+    }
+
+    private void AddCubes()
+    {
+        bool isCollidingWithCube = false;
+        bool isCollidingWithGlue = false;
+        foreach (Transform collidingObject in collidingObjects)
+        {
+            if (collidingObject.tag == "Background")
+            {
+                isCollidingWithCube = true;
+                break;
+            }
+            else if (collidingObject.tag == "GlueYellow")
+            {
+                isCollidingWithGlue = true;
+            }
+        }
+
+        if (isCollidingWithCube)
         {
             MoveRevert();
         }
+        else if (isCollidingWithGlue)
+        {
+            GameObject parentGameObject = collidingObjects[0].parent.gameObject;
+            int childCount = parentGameObject.transform.childCount;
+
+            for (int i = 0; i < childCount; i++)
+            {
+                Transform currentChild = parentGameObject.transform.GetChild(0);
+
+                if (currentChild.CompareTag("Background"))
+                {
+                    currentChild.tag = "Player";
+                    currentChild.GetComponent<Collider>().isTrigger = false;
+                    transform.parent.gameObject.GetComponentInParent<CubeController>().cubesAmmount += 1;
+                }
+
+                currentChild.transform.parent = transform;
+            }
+
+            Destroy(parentGameObject);
+        }
+        collidingObjects.Clear();
     }
 
     private void OnTriggerExit(Collider other)
