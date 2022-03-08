@@ -19,9 +19,8 @@ public class MenuController : MonoBehaviour {
             levelDisplay = GameObject.Find("LevelName").GetComponent<Text>();
             levelDisplay.text = SceneManager.GetActiveScene().name; 
         }
-        // For parsing NextLevel name with dots not commas
-        CultureInfo.CurrentCulture = new CultureInfo("en-US", false);
     }
+
     public void NewGame()
     {
         SceneManager.LoadScene("1.01");
@@ -35,7 +34,7 @@ public class MenuController : MonoBehaviour {
     public void NextLevel()
     {
         //TODO fix this hax
-        level = float.Parse(SceneManager.GetActiveScene().name);
+        level = float.Parse(SceneManager.GetActiveScene().name, new CultureInfo("en-US", false));
         if (level < 1.12f || (level > 2 && level < 2.10))
         {
             level += 0.01f;
@@ -50,7 +49,7 @@ public class MenuController : MonoBehaviour {
             level = 1.12f;
         }
 
-        levelName = level.ToString();
+        levelName = level.ToString(new CultureInfo("en-US", false));
 
         if (level == 1.1f || level == 2.1f)
         {
