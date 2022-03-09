@@ -6,3 +6,4 @@ StickyCube/.vsconfig
 StickyCube/Logs/
 StickyCube/Temp/
 *.meta
+*.csproj
