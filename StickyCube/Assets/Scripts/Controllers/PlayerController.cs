@@ -6,17 +6,12 @@ public class PlayerController : MonoBehaviour {
 
 
     public float moveTime;
+    public AudioSource failSound;
 
-
-    private float currentTime;
-    private bool revert = false;
     private string lastMove;
     private GameObject pivot_1; 
     private GameObject pivot_2; 
-    private GameObject puzzleController;
-    public AudioSource failSound; //
-    private RaycastHit hit;
-    private Bounds bounds;
+    private PuzzlesController puzzleController;
     private List<Transform> collidingObjects;
 
     private void Start()
@@ -24,7 +19,7 @@ public class PlayerController : MonoBehaviour {
         collidingObjects = new List<Transform>();
         pivot_1 = gameObject.transform.Find("pivot1").gameObject;
         pivot_2 = gameObject.transform.Find("pivot2").gameObject;
-        puzzleController = GameObject.Find("Background");
+        puzzleController = GameObject.Find("Background").GetComponent<PuzzlesController>();
         BoundsGenerate();
     }
 
@@ -58,13 +53,14 @@ public class PlayerController : MonoBehaviour {
         failSound.Play();
     }
 
-    public void ButtonSearch()
+    public void CheckCollisionWithButton()
     {
         bool isTouchingButton = false;
         foreach (Transform child in transform)
         {
             if (child.CompareTag("Player"))
             {
+                RaycastHit hit;
                 isTouchingButton = Physics.Raycast(child.position, Vector3.down, out hit, 1, 1 << 8);
                 if (isTouchingButton == true &&
                    (hit.collider.CompareTag("Finish")
@@ -72,7 +68,7 @@ public class PlayerController : MonoBehaviour {
                    || hit.collider.CompareTag("Red")
                    || hit.collider.CompareTag("Green")))
                 {
-                    transform.parent.GetComponent<CubeController>().ButtonPush();
+                    transform.parent.GetComponent<PlayersManager>().ButtonPush();
                 }
             }
         }
@@ -117,7 +113,6 @@ public class PlayerController : MonoBehaviour {
                 {
                     currentChild.tag = "Player";
                     currentChild.GetComponent<Collider>().isTrigger = false;
-                    transform.parent.gameObject.GetComponentInParent<CubeController>().cubesAmmount += 1;
                 }
 
                 currentChild.transform.parent = transform;
@@ -132,15 +127,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (other.transform.tag == "Blue" && GameObject.Find("BluePuzzle").GetComponent<Animator>().GetBool("BlueDown"))
         {
-            puzzleController.GetComponent<PuzzlesController>().MoveBlue(false);
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            MoveRevert();
+            puzzleController.MoveBlue(false);
         }
     }
 
@@ -150,7 +137,6 @@ public class PlayerController : MonoBehaviour {
         var currentRot = transform.rotation;
         lastMove = direction;
 
-        revert = false;
         BoundsGenerate();
 
             switch (direction)
@@ -176,6 +162,7 @@ public class PlayerController : MonoBehaviour {
             {
                 if (child.CompareTag("Player"))
                 {
+                    RaycastHit hit;
                     if (Physics.Raycast(child.position, Vector3.down * 2, out hit, 2, 1 << 8))
                     {
                         if (hit.collider.CompareTag("Respawn"))
@@ -186,18 +173,19 @@ public class PlayerController : MonoBehaviour {
                     }
                 }
             }
-        ButtonSearch();
+        CheckCollisionWithButton();
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(bounds.center, bounds.size);
-    }
+    // Uncomment when we will need Debug gizmos
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawWireCube(bounds.center, bounds.size);
+    //}
 
     public void BoundsGenerate()
     {
-        bounds = new Bounds(gameObject.transform.position, new Vector3(1, 1, 1));
+        Bounds bounds = new Bounds(gameObject.transform.position, new Vector3(1, 1, 1));
         foreach (Transform child in transform)
         {
             if (child.CompareTag("Player"))

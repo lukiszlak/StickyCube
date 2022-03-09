@@ -4,61 +4,42 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class CubeController : MonoBehaviour {
+public class PlayersManager : MonoBehaviour {
+   
+    private PlayerController[] players;
+    private Camera camera;
 
-
-    public int showMeDatFinishRaycastCount;
-
-    public int cubesAmmount;
-    public int cubesToFinish;
-    public int cubesHittingFinish;
-    public int playersAmmount;
-    public bool secondPlayerControlled = false;
-    
-    public GameObject[] players;
-    public Camera camera;
-
-    private GameObject levelEndScreen;
-    private GameObject controlButtons;
-    private GameObject restartButtons;
-    private GameObject puzzleController;
-    public Vector3 cameraPlacement;
-    private RaycastHit hit;
-    public int playerNumber = 0; //
-    public int currentPlayerNumber = 0;
-    private float cameraTimeHolder;
-    private string lastMove;
-    private string activeScene;
+    private MenuController menuController;
+    private PuzzlesController puzzleController;
+    private int playerCount = 0; 
+    private int currentPlayerNumber = 0;
+    private float cameraTimeHolder; // TODO check if it does anything
     private bool cameraMoving = false;
 
     private void Awake()
     {
         camera = Camera.main;
 
-        players = new GameObject[transform.childCount];
-        playerNumber = transform.childCount;
-        puzzleController = GameObject.Find("Background");
+        players = new PlayerController[transform.childCount];
+        playerCount = transform.childCount;
+        puzzleController = GameObject.Find("Background").GetComponent<PuzzlesController>();
+        menuController = GameObject.Find("MenuController").GetComponent<MenuController>();
 
         for (int i = 0; i < transform.childCount; i++)
         {
-            players[i] = transform.GetChild(i).gameObject;
+            players[i] = transform.GetChild(i).transform.GetComponent<PlayerController>();
         }
     }
 
     private void Start()
     {
         Setup();
-        levelEndScreen = GameObject.Find("LevelEnd");
-        controlButtons = GameObject.Find("Controls");
-        restartButtons = GameObject.Find("PauseButtons");
-        levelEndScreen.SetActive(false);
         Time.timeScale = 1;
-        activeScene = SceneManager.GetActiveScene().name;
     }
 
     void Update()
     {
-        Debug.DrawRay(players[currentPlayerNumber].gameObject.transform.position, Vector3.down, Color.red);
+        Debug.DrawRay(transform.GetChild(currentPlayerNumber).transform.position, Vector3.down, Color.red);
 
         if (Input.GetKeyDown(KeyCode.I) /*&& figureBoxCount > 1*/)
         {
@@ -68,19 +49,19 @@ public class CubeController : MonoBehaviour {
         // TODO change it to something more sensible
         if (Input.GetKeyDown(KeyCode.W))
         {
-            GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("W");
+            Move("W");
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("S");
+            Move("S");
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("A");
+            Move("A");
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("D");
+            Move("D");
         }
         //
 
@@ -102,7 +83,8 @@ public class CubeController : MonoBehaviour {
                 cameraMoving = false;
                 return;
             }
-            camera.transform.position = new Vector3(Mathf.Lerp(camera.transform.position.x, players[currentPlayerNumber].transform.position.x + 6, cameraTimeToMove), cameraPlacement.y, cameraPlacement.z);
+            Vector3 cameraPositionHolder = camera.transform.position; 
+            camera.transform.position = new Vector3(Mathf.Lerp(cameraPositionHolder.x, players[currentPlayerNumber].transform.position.x + 6, cameraTimeToMove), cameraPositionHolder.y, cameraPositionHolder.z);
         }
     }
 
@@ -110,14 +92,14 @@ public class CubeController : MonoBehaviour {
     {
         if (keyPressed == "W" || keyPressed == "S" || keyPressed == "A" || keyPressed == "D")
         {
-            players[currentPlayerNumber].gameObject.transform.GetComponent<PlayerController>().MoveToPosition(keyPressed);
+            players[currentPlayerNumber].MoveToPosition(keyPressed);
         }
 
     }
 
     public void ChangePlayer()
     {
-        if (currentPlayerNumber < playerNumber -1)
+        if (currentPlayerNumber < playerCount -1)
         {
             currentPlayerNumber++;
         }
@@ -125,7 +107,6 @@ public class CubeController : MonoBehaviour {
         {
             currentPlayerNumber = 0;
         }
-        cameraPlacement = camera.transform.position;
         cameraMoving = true;
         cameraTimeHolder = Time.time + 30;
     }
@@ -137,14 +118,6 @@ public class CubeController : MonoBehaviour {
         //GameObject.Find("Left").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("A");});
         //GameObject.Find("Down").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("S");});
         //GameObject.Find("Up").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("W");});
-    }
-
-    public void LevelEnd()
-    {
-        levelEndScreen.SetActive(true);
-        restartButtons.SetActive(false);
-        controlButtons.SetActive(false);
-        Time.timeScale = 0;
     }
 
     public void DetachBox()
@@ -165,6 +138,7 @@ public class CubeController : MonoBehaviour {
 
         foreach (Transform child in players[currentPlayerNumber].transform)
         {
+             RaycastHit hit;
             isTouchingButton = Physics.Raycast(child.position, Vector3.down, out hit, 1, 1 << 8);
             if (child.CompareTag("Player"))
             {
@@ -182,16 +156,16 @@ public class CubeController : MonoBehaviour {
                     switch (hit.transform.tag)
                     {
                         case "Finish":
-                            LevelEnd();
+                            menuController.LevelEnd();
                             break;
                         case "Blue":
-                            puzzleController.GetComponent<PuzzlesController>().MoveBlue(true);
+                            puzzleController.MoveBlue(true);
                             break;
                         case "Red":
                             ChangePlayer();
                             break;
                         case "Green":
-                            puzzleController.GetComponent<PuzzlesController>().MoveBlue(true);
+                            puzzleController.MoveBlue(true);
                             break;
                     }
                 }

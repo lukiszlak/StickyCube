@@ -7,17 +7,20 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour {
 
-    private float level;
-    private string levelName;
-    private Scene currentScene;
-    private Text levelDisplay;
+    private GameObject levelEndScreen;
+    private GameObject controlButtons;
+    private GameObject restartButtons;
 
     private void Awake()
     {
         if (SceneManager.GetActiveScene().name != "MainMenu")
         {
-            levelDisplay = GameObject.Find("LevelName").GetComponent<Text>();
-            levelDisplay.text = SceneManager.GetActiveScene().name; 
+            Text levelDisplay = GameObject.Find("LevelName").GetComponent<Text>();
+            levelDisplay.text = SceneManager.GetActiveScene().name; // TODO check if It's not started every level, if yes then we can save active scene name to a variable
+            levelEndScreen = GameObject.Find("LevelEnd");
+            controlButtons = GameObject.Find("Controls");
+            restartButtons = GameObject.Find("PauseButtons");
+            levelEndScreen.SetActive(false);
         }
     }
 
@@ -31,10 +34,21 @@ public class MenuController : MonoBehaviour {
 
     }
 
+    public void LevelEnd()
+    {
+        if (levelEndScreen)
+            levelEndScreen.SetActive(true);
+        if (restartButtons)
+            restartButtons.SetActive(false);
+        if (controlButtons) 
+            controlButtons.SetActive(false);
+        Time.timeScale = 0;
+    }
+
     public void NextLevel()
     {
         //TODO fix this hax
-        level = float.Parse(SceneManager.GetActiveScene().name, new CultureInfo("en-US", false));
+        float level = float.Parse(SceneManager.GetActiveScene().name, new CultureInfo("en-US", false));
         if (level < 1.12f || (level > 2 && level < 2.10))
         {
             level += 0.01f;
@@ -49,7 +63,7 @@ public class MenuController : MonoBehaviour {
             level = 1.12f;
         }
 
-        levelName = level.ToString(new CultureInfo("en-US", false));
+        string levelName = level.ToString(new CultureInfo("en-US", false));
 
         if (level == 1.1f || level == 2.1f)
         {
@@ -62,8 +76,8 @@ public class MenuController : MonoBehaviour {
 
     public void Restart()
     {
-        currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.name);
+        string currentScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentScene);
     }
 
     public void Options()
