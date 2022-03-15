@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour {
     {
         bool isCollidingWithCube = false;
         bool isCollidingWithGlue = false;
+        Transform collidingObjectTransform = null;
+
         foreach (Transform collidingObject in collidingObjects)
         {
             if (collidingObject.tag == "Background")
@@ -92,7 +94,9 @@ public class PlayerController : MonoBehaviour {
             }
             else if (collidingObject.tag == "GlueYellow")
             {
+                collidingObjectTransform = collidingObject;
                 isCollidingWithGlue = true;
+                break;
             }
         }
 
@@ -100,9 +104,9 @@ public class PlayerController : MonoBehaviour {
         {
             MoveRevert();
         }
-        else if (isCollidingWithGlue)
+        else if (isCollidingWithGlue && collidingObjectTransform)
         {
-            GameObject parentGameObject = collidingObjects[0].parent.gameObject;
+            GameObject parentGameObject = collidingObjectTransform.parent.gameObject;
             int childCount = parentGameObject.transform.childCount;
 
             for (int i = 0; i < childCount; i++)
