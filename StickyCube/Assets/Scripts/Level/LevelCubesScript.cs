@@ -10,13 +10,10 @@ public class LevelCubesScript : MonoBehaviour
 
     enum State { EditMode, DeleteMode, PlayMode };
     State myState = State.EditMode;
-    private Transform thisObjectTransform;
-    private string objectName;
-    private bool isGenerated = false;
+    private bool isGenerated = false; // TODO check if we need this when generating levels
 
     void Start()
     {
-        objectName = gameObject.name;
         parent = GameObject.Find("FloorGenerator").GetComponent<LevelGenerator>();
     }
 

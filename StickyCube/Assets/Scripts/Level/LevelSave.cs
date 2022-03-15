@@ -11,7 +11,7 @@ public class LevelSave : MonoBehaviour {
 
     public int floorContainerChildCount;
     public GameObject FloorContainer;
-    public PlayerData[] playerData;
+    public PlayerData[] playerData; // TODO check if it does anything
     JSONArray levelData;
 
 

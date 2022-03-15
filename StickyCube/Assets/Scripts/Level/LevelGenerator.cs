@@ -8,12 +8,9 @@ public class LevelGenerator : MonoBehaviour
     public int horizontalGrid;
     public GameObject levelTrigger;
     public GameObject levelCube;
-    public bool editMode;
 
 
     private GameObject deathVolume;
-    private GameObject temporaryContainer;
-    private bool alreadyGenerated = false;
     [SerializeField]
     public GameObject[,] checker;
 
@@ -73,11 +70,10 @@ public class LevelGenerator : MonoBehaviour
             return;
         }
         Vector3 moveFromEmpty = new Vector3((transform.position.x + x), transform.position.y, (transform.position.z + y));
-        temporaryContainer = Instantiate(levelCube, GameObject.Find("Background/FloorContainer").transform);
+        GameObject temporaryContainer = Instantiate(levelCube, GameObject.Find("Background/FloorContainer").transform);
         temporaryContainer.transform.position = moveFromEmpty;
         temporaryContainer.name = x + "_" + y;
         temporaryContainer.transform.parent = GameObject.Find("FloorContainer").transform;
-        temporaryContainer = null;
     }
 
 
