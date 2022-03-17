@@ -546,6 +546,86 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floorContainerChildCount: 0
   FloorContainer: {fileID: 0}
+--- !u!1 &1018582156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1018582157}
+  - component: {fileID: 1018582159}
+  - component: {fileID: 1018582158}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1018582157
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018582156}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1846029015}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 102.5, y: -34.6}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1018582158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018582156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 15
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: "`I` - Detaching Sticky Cube\r\n`F` - Change Player\n\n`1` - Play Mode\r\n`2`
+    - Add Mode\r (Default)\n`3` - Substract Mode\r"
+--- !u!222 &1018582159
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018582156}
+  m_CullTransparentMesh: 1
 --- !u!850595691 &1069127900
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -997,6 +1077,12 @@ Transform:
   m_Father: {fileID: 514550273}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &1846029015 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 224609583970713002, guid: de11a708c260bbd42bce84c37ab5f07a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1688508176}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1890530637 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4434699212437612, guid: f535c3fd65ce7cf4dba0a19578ae83b8,
@@ -1053,7 +1139,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1182476850754042, guid: e6515f6cac56e9c4180cec818c5dce93, type: 3}
       propertyPath: m_Name
-      value: glue2
+      value: GlueGlue
       objectReference: {fileID: 0}
     - target: {fileID: 1673334842507622, guid: e6515f6cac56e9c4180cec818c5dce93, type: 3}
       propertyPath: m_IsActive
@@ -1061,7 +1147,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1938417083824976, guid: e6515f6cac56e9c4180cec818c5dce93, type: 3}
       propertyPath: m_Name
-      value: box2
+      value: GlueBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 1938417083824976, guid: e6515f6cac56e9c4180cec818c5dce93, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4376702568831744, guid: e6515f6cac56e9c4180cec818c5dce93, type: 3}
       propertyPath: m_RootOrder

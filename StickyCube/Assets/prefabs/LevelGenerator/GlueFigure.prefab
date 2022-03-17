@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 65706127020068744}
   - component: {fileID: 23213552764650288}
   m_Layer: 0
-  m_Name: Glue (1)
+  m_Name: GlueGlue
   m_TagString: GlueYellow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 65287669347476828}
   - component: {fileID: 23030674367886120}
   m_Layer: 0
-  m_Name: box 3 (1)
+  m_Name: GlueBox
   m_TagString: Background
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

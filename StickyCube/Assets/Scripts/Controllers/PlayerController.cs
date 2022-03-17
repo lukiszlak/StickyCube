@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
     public AudioSource failSound;
 
     private string lastMove;
+    private bool recentlyMoved = false;
     private GameObject pivot_1; 
     private GameObject pivot_2; 
     private PuzzlesController puzzleController;
@@ -25,10 +26,13 @@ public class PlayerController : MonoBehaviour {
 
     private void Update()
     {
-        if (collidingObjects.Count > 0)
+        if (collidingObjects.Count > 0 && recentlyMoved)
         {
             AddCubes();
+            recentlyMoved = false;
         }
+
+        collidingObjects.Clear();
     }
 
     public void MoveRevert()
@@ -124,7 +128,6 @@ public class PlayerController : MonoBehaviour {
 
             Destroy(parentGameObject);
         }
-        collidingObjects.Clear();
     }
 
     private void OnTriggerExit(Collider other)
@@ -143,41 +146,43 @@ public class PlayerController : MonoBehaviour {
 
         BoundsGenerate();
 
-            switch (direction)
-            {
-                //Checks which direction to move
-                case "W":
-                    transform.RotateAround(pivot_1.transform.position, Vector3.right, 90);
-                    break;
-                case "S":
-                    transform.RotateAround(pivot_2.transform.position, Vector3.left, 90);
-                    break;
-                case "A":
-                    transform.RotateAround(pivot_2.transform.position, Vector3.forward, 90);
-                    break;
-                case "D":
-                    transform.RotateAround(pivot_1.transform.position, Vector3.back, 90);
-                    break;
-            }
+        switch (direction)
+        {
+            //Checks which direction to move
+            case "W":
+                transform.RotateAround(pivot_1.transform.position, Vector3.right, 90);
+                break;
+            case "S":
+                transform.RotateAround(pivot_2.transform.position, Vector3.left, 90);
+                break;
+            case "A":
+                transform.RotateAround(pivot_2.transform.position, Vector3.forward, 90);
+                break;
+            case "D":
+                transform.RotateAround(pivot_1.transform.position, Vector3.back, 90);
+                break;
+        }
 
-            BoundsGenerate();
+        BoundsGenerate();
 
-            foreach (Transform child in transform)
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag("Player"))
             {
-                if (child.CompareTag("Player"))
+                RaycastHit hit;
+                if (Physics.Raycast(child.position, Vector3.down * 2, out hit, 2, 1 << 8))
                 {
-                    RaycastHit hit;
-                    if (Physics.Raycast(child.position, Vector3.down * 2, out hit, 2, 1 << 8))
-                    {
-                        if (hit.collider.CompareTag("Respawn"))
-                        { 
-                            MoveRevert();
-                            return;
-                        }
+                    if (hit.collider.CompareTag("Respawn"))
+                    { 
+                        MoveRevert();
+                        return;
                     }
                 }
             }
+        }
+
         CheckCollisionWithButton();
+        recentlyMoved = true;
     }
 
     // Uncomment when we will need Debug gizmos
@@ -186,6 +191,24 @@ public class PlayerController : MonoBehaviour {
     //    Gizmos.color = Color.yellow;
     //    Gizmos.DrawWireCube(bounds.center, bounds.size);
     //}
+
+    public void DetachGlueFigure()
+    {
+        Transform tempBox = transform.Find("GlueBox");
+        Transform tempGlue = transform.Find("GlueGlue");
+        if (tempBox && tempGlue)
+        {
+            Transform glueBoxHolder = new GameObject("GlueFigure").transform;
+            glueBoxHolder.position = tempBox.position;
+            tempBox.parent = glueBoxHolder;
+            tempGlue.parent = glueBoxHolder;
+        }
+        else
+        {
+            print("We couldn't detach sticky cube because We couldn't find its children");
+            failSound.Play();
+        }
+    }
 
     public void BoundsGenerate()
     {

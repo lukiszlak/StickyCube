@@ -43,7 +43,7 @@ public class PlayersManager : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.I) /*&& figureBoxCount > 1*/)
         {
-            DetachBox();
+            DetachGlueFigure();
         }
 
         // TODO change it to something more sensible
@@ -120,14 +120,9 @@ public class PlayersManager : MonoBehaviour {
         //GameObject.Find("Up").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("W");});
     }
 
-    public void DetachBox()
+    private void DetachGlueFigure()
     {
-            GameObject tempBox = GameObject.Find("box");
-            GameObject tempGlue = GameObject.Find("glue");
-            var glueBoxHolder = new GameObject("GlueFigure");
-            glueBoxHolder.gameObject.transform.position = tempBox.transform.position;
-            tempBox.transform.SetParent(glueBoxHolder.transform);
-            tempGlue.transform.SetParent(glueBoxHolder.transform);
+        players[currentPlayerNumber].DetachGlueFigure();
     }
 
     public void ButtonPush()
