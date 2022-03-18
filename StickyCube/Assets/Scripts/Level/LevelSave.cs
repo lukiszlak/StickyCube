@@ -53,7 +53,7 @@ public class LevelSave : MonoBehaviour {
 
     public void Load()
     {
-        string jsonString = File.ReadAllText("G:/!!!Unity/StickyCube/StickyCube/Assets/Levels/SavedLevels.json");
+        string jsonString = File.ReadAllText("Assets/Levels/SavedLevels.json");
         print(jsonString);
         levelData = (JSONArray)JSON.Parse(jsonString);
         howLong =  levelData.Count;
@@ -67,8 +67,8 @@ public class LevelSave : MonoBehaviour {
 
     void Save()
     {
-
-        if (File.ReadAllText("G:/!!!Unity/StickyCube/StickyCube/Assets/Levels/SavedLevels.json") != null)
+        // G:/!!!Unity/StickyCube/StickyCube/
+        if (File.ReadAllText("Assets/Levels/SavedLevels.json") != null)
         {
             for (int i = 0; i < FloorContainer.transform.childCount; i++)
             {
@@ -81,7 +81,7 @@ public class LevelSave : MonoBehaviour {
             }
 
             print("This is JSON " + levelData.ToString());
-            File.WriteAllText("G:/!!!Unity/StickyCube/StickyCube/Assets/Levels/SavedLevels.json", levelData.ToString());
+            File.WriteAllText("Assets/Levels/SavedLevels.json", levelData.ToString());
         }
     }
 }

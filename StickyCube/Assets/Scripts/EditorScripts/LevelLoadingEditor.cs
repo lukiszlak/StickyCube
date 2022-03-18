@@ -22,7 +22,7 @@ public class LevelLoadingEditor : MonoBehaviour
     
     public void Load()
     {
-        string jsonString = File.ReadAllText("G:/!!!Unity/StickyCube/StickyCube/Assets/Levels/SavedLevels.json");
+        string jsonString = File.ReadAllText("Assets/Levels/SavedLevels.json");
         print(jsonString);
         levelData = (JSONArray)JSON.Parse(jsonString);
         howLong = levelData.Count;
