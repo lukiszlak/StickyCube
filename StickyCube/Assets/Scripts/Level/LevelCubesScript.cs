@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelCubesScript : MonoBehaviour
 {
+    // TODO check if we can just move this function inside LevelGenerator
     public int i;
     public int j;
     public LevelGenerator parent;
@@ -11,10 +13,13 @@ public class LevelCubesScript : MonoBehaviour
     enum State { EditMode, DeleteMode, PlayMode };
     State myState = State.EditMode;
     private bool isGenerated = false; // TODO check if we need this when generating levels
+    private Text GameModeText;
 
     void Start()
     {
         parent = GameObject.Find("FloorGenerator").GetComponent<LevelGenerator>();
+        GameModeText = GameObject.Find("GameMode").GetComponent<Text>();
+        GameModeText.text = "Edit Mode";
     }
 
     private void Update()
@@ -22,12 +27,16 @@ public class LevelCubesScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             myState = State.PlayMode;
+            GameModeText.text = "Play Mode";
         }else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             myState = State.EditMode;
-        }else if (Input.GetKeyDown(KeyCode.Alpha3))
+            GameModeText.text = "Edit Mode";
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             myState = State.DeleteMode;
+            GameModeText.text = "Delete Mode";
         }
     }
 
@@ -40,8 +49,17 @@ public class LevelCubesScript : MonoBehaviour
         }
         else if (other.CompareTag("Player") && myState == State.DeleteMode && isGenerated == true)
         {
-            Destroy(GameObject.Find(i + "_" + j));
-            isGenerated = false;
+            GameObject objectToDelete = GameObject.Find(string.Format("Background/FloorContainer/{0}_{1}", i, j));
+
+            if (objectToDelete)
+            {
+                Destroy(objectToDelete);
+                isGenerated = false;
+            }
+        }
+        else if (other.CompareTag("Finish"))
+        {
+            Destroy(gameObject);
         }
     }
 }

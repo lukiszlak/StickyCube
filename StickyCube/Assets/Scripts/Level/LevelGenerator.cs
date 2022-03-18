@@ -9,7 +9,6 @@ public class LevelGenerator : MonoBehaviour
     public GameObject levelTrigger;
     public GameObject levelCube;
 
-
     private GameObject deathVolume;
     [SerializeField]
     public GameObject[,] checker;
@@ -23,6 +22,8 @@ public class LevelGenerator : MonoBehaviour
 
     void Start ()
     {
+
+        // TODO Move it to function called creating grid or something like this
         for (int i = 0; i < verticalGrid; i++)
         {
             for (int j = 0; j < horizontalGrid; j++)
