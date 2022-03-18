@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(LevelLoadingEditor))]
+[CustomEditor(typeof(LevelSave))]
 public class FloorLoadingInEditor : Editor
 {
     private GameObject objectHolder;
@@ -12,7 +12,7 @@ public class FloorLoadingInEditor : Editor
     {
         DrawDefaultInspector();
 
-        LevelLoadingEditor mySaveScript = (LevelLoadingEditor)target;
+        LevelSave mySaveScript = (LevelSave)target;
 
         if (GUILayout.Button("Load Saved Scene"))
         {
