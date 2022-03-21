@@ -14,6 +14,9 @@ public class LevelSave : MonoBehaviour {
     public PlayerData[] playerData; // TODO check if it does anything
     JSONArray levelData;
 
+    private float MessageStartingTime = -5.0f;
+    private string debugMessage;
+
 
     [System.Serializable]
     public class PlayerData
@@ -41,13 +44,25 @@ public class LevelSave : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.K))
         {
             Save();
-            print("Saved");
+            MessageStartingTime = Time.time;
+            debugMessage = "Saved";
         }
 
         if (Input.GetKeyDown(KeyCode.L))
         {
             Load();
             print("Loaded");
+            MessageStartingTime = Time.time;
+            debugMessage = "Loaded";
+        }
+    }
+
+    private void OnGUI()
+    {
+        // TODO maybe move it to Menu controller? 
+        if ((MessageStartingTime + 2) > Time.time)
+        {
+            GUI.Label(new Rect(Screen.width / 2, Screen.height / 4, 200f, 200f), debugMessage);
         }
     }
 

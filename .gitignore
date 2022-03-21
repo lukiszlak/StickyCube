@@ -7,3 +7,4 @@ StickyCube/Logs/
 StickyCube/Temp/
 *.meta
 *.csproj
+StickyCube/Assets/Levels/SavedLevels.json
