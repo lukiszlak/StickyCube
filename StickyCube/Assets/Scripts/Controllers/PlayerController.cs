@@ -41,9 +41,9 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.tag == "Blue" && GameObject.Find("BluePuzzle").GetComponent<Animator>().GetBool("BlueDown"))
+        if (other.transform.tag == "Blue")
         {
-            puzzleController.MoveBlue(false);
+            puzzleController.AddPlayerCollidingWithButton(-1);
         }
     }
 
