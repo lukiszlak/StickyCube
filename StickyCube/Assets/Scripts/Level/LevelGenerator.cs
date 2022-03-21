@@ -51,19 +51,6 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    public void GenerateTheCube(int i,int j)
-    {
-        if (GameObject.Find("Background/FloorContainer/" + i + "_" + j))
-        {
-            return;
-        }
-        Vector3 posHolder = checker[i, j].transform.position;
-        GameObject cubeHolder = Instantiate(levelCube, GameObject.Find("Background/FloorContainer").transform);
-        cubeHolder.transform.Translate(posHolder);
-        cubeHolder.gameObject.GetComponent<FloorValuesHolder>().SetXandY(i, j);
-        cubeHolder.gameObject.name = i + "_" + j;
-    }
-
     public void CreateCheckerArray(int x, int y)
     {
         if (GameObject.Find("Background/FloorContainer/" + x + "_" + y))
@@ -77,5 +64,17 @@ public class LevelGenerator : MonoBehaviour
         temporaryContainer.transform.parent = GameObject.Find("FloorContainer").transform;
     }
 
+    public void GenerateTheCube(int i,int j)
+    {
+        if (GameObject.Find("Background/FloorContainer/" + i + "_" + j))
+        {
+            return;
+        }
+        Vector3 posHolder = checker[i, j].transform.position;
+        GameObject cubeHolder = Instantiate(levelCube, GameObject.Find("Background/FloorContainer").transform);
+        cubeHolder.transform.Translate(posHolder);
+        cubeHolder.gameObject.GetComponent<FloorValuesHolder>().SetXandY(i, j);
+        cubeHolder.gameObject.name = i + "_" + j;
+    }
 
 }

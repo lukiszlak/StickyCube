@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-
     public float moveTime;
     public AudioSource failSound;
 
@@ -35,52 +34,17 @@ public class PlayerController : MonoBehaviour {
         collidingObjects.Clear();
     }
 
-    public void MoveRevert()
-    {
-        if (lastMove == "W")
-        {
-            MoveToPosition("S");
-        }
-        else if (lastMove == "S")
-        {
-            MoveToPosition("W");
-        }
-        else if (lastMove == "A")
-        {
-            MoveToPosition("D");
-        }
-        else if (lastMove == "D")
-        {
-            MoveToPosition("A");
-        }
-        //TODO Dodaj prawidłowy dźwięk przy anulowaniu
-        failSound.Play();
-    }
-
-    public void CheckCollisionWithButton()
-    {
-        bool isTouchingButton = false;
-        foreach (Transform child in transform)
-        {
-            if (child.CompareTag("Player"))
-            {
-                RaycastHit hit;
-                isTouchingButton = Physics.Raycast(child.position, Vector3.down, out hit, 1, 1 << 8);
-                if (isTouchingButton == true &&
-                   (hit.collider.CompareTag("Finish")
-                   || hit.collider.CompareTag("Blue")
-                   || hit.collider.CompareTag("Red")
-                   || hit.collider.CompareTag("Green")))
-                {
-                    transform.parent.GetComponent<PlayersManager>().ButtonPush();
-                }
-            }
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         collidingObjects.Add(other.transform);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform.tag == "Blue" && GameObject.Find("BluePuzzle").GetComponent<Animator>().GetBool("BlueDown"))
+        {
+            puzzleController.MoveBlue(false);
+        }
     }
 
     private void AddCubes()
@@ -127,14 +91,6 @@ public class PlayerController : MonoBehaviour {
             }
 
             Destroy(parentGameObject);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.transform.tag == "Blue" && GameObject.Find("BluePuzzle").GetComponent<Animator>().GetBool("BlueDown"))
-        {
-            puzzleController.MoveBlue(false);
         }
     }
 
@@ -185,12 +141,72 @@ public class PlayerController : MonoBehaviour {
         recentlyMoved = true;
     }
 
+    public void MoveRevert()
+    {
+        if (lastMove == "W")
+        {
+            MoveToPosition("S");
+        }
+        else if (lastMove == "S")
+        {
+            MoveToPosition("W");
+        }
+        else if (lastMove == "A")
+        {
+            MoveToPosition("D");
+        }
+        else if (lastMove == "D")
+        {
+            MoveToPosition("A");
+        }
+        //TODO Dodaj prawidłowy dźwięk przy anulowaniu
+        failSound.Play();
+    }
+
     // Uncomment when we will need Debug gizmos
     //private void OnDrawGizmos()
     //{
     //    Gizmos.color = Color.yellow;
     //    Gizmos.DrawWireCube(bounds.center, bounds.size);
     //}
+
+    public void BoundsGenerate()
+    {
+        Bounds bounds = new Bounds(gameObject.transform.position, new Vector3(1, 1, 1));
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag("Player"))
+            {
+                bounds.Encapsulate(child.GetComponent<Renderer>().bounds);
+            }
+
+        }
+        pivot_1.transform.position = new Vector3(Mathf.Round(bounds.max.x), Mathf.Round(bounds.min.y), Mathf.Round(bounds.max.z));
+        pivot_2.transform.position = new Vector3(Mathf.Round(bounds.min.x), Mathf.Round(bounds.min.y), Mathf.Round(bounds.min.z));
+    }
+
+    public void CheckCollisionWithButton()
+    {
+        bool isTouchingButton = false;
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag("Player"))
+            {
+                RaycastHit hit;
+                isTouchingButton = Physics.Raycast(child.position, Vector3.down, out hit, 1, 1 << 8);
+                if (isTouchingButton == true &&
+                   (hit.collider.CompareTag("Finish")
+                   || hit.collider.CompareTag("Blue")
+                   || hit.collider.CompareTag("Red")
+                   || hit.collider.CompareTag("Green")))
+                {
+                    transform.parent.GetComponent<PlayersManager>().ButtonPush();
+                }
+            }
+        }
+    }
+
+    ///// Debug Functions
 
     public void DetachGlueFigure()
     {
@@ -209,19 +225,7 @@ public class PlayerController : MonoBehaviour {
             failSound.Play();
         }
     }
+    
+    /////
 
-    public void BoundsGenerate()
-    {
-        Bounds bounds = new Bounds(gameObject.transform.position, new Vector3(1, 1, 1));
-        foreach (Transform child in transform)
-        {
-            if (child.CompareTag("Player"))
-            {
-                bounds.Encapsulate(child.GetComponent<Renderer>().bounds);
-            }
-
-        }
-        pivot_1.transform.position = new Vector3(Mathf.Round(bounds.max.x), Mathf.Round(bounds.min.y), Mathf.Round(bounds.max.z));
-        pivot_2.transform.position = new Vector3(Mathf.Round(bounds.min.x), Mathf.Round(bounds.min.y), Mathf.Round(bounds.min.z));
-    }
 }

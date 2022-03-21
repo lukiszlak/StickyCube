@@ -88,6 +88,15 @@ public class PlayersManager : MonoBehaviour {
         }
     }
 
+    private void Setup()
+    {
+        //TODO Redo this shit it attaches player function to the buttons soo they can move
+        //GameObject.Find("Right").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("D");});
+        //GameObject.Find("Left").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("A");});
+        //GameObject.Find("Down").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("S");});
+        //GameObject.Find("Up").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("W");});
+    }
+
     public void Move(string keyPressed)
     {
         if (keyPressed == "W" || keyPressed == "S" || keyPressed == "A" || keyPressed == "D")
@@ -111,20 +120,6 @@ public class PlayersManager : MonoBehaviour {
         cameraTimeHolder = Time.time + 30;
     }
 
-    private void Setup()
-    {
-        //TODO Redo this shit it attaches player function to the buttons soo they can move
-        //GameObject.Find("Right").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("D");});
-        //GameObject.Find("Left").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("A");});
-        //GameObject.Find("Down").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("S");});
-        //GameObject.Find("Up").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("W");});
-    }
-
-    private void DetachGlueFigure()
-    {
-        players[currentPlayerNumber].DetachGlueFigure();
-    }
-
     public void ButtonPush()
     {
         int x = 0;
@@ -133,7 +128,7 @@ public class PlayersManager : MonoBehaviour {
 
         foreach (Transform child in players[currentPlayerNumber].transform)
         {
-             RaycastHit hit;
+            RaycastHit hit;
             isTouchingButton = Physics.Raycast(child.position, Vector3.down, out hit, 1, 1 << 8);
             if (child.CompareTag("Player"))
             {
@@ -167,4 +162,13 @@ public class PlayersManager : MonoBehaviour {
             }
         }
     }
+
+    ///// Debug Functions
+
+    private void DetachGlueFigure()
+    {
+        players[currentPlayerNumber].DetachGlueFigure();
+    }
+
+    /////
 }
