@@ -148,14 +148,11 @@ public class PlayersManager : MonoBehaviour {
                         case "Finish":
                             menuController.LevelEnd();
                             break;
-                        case "Blue":
-                            puzzleController.AddPlayerCollidingWithButton(1);
-                            break;
                         case "Red":
                             ChangePlayer();
                             break;
                         case "Green":
-                            puzzleController.AddPlayerCollidingWithButton(1);
+                            puzzleController.AddPlayersCollidingWithButtons(1);
                             break;
                     }
                 }

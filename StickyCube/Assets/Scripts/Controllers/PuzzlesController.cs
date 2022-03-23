@@ -6,7 +6,7 @@ public class PuzzlesController : MonoBehaviour {
 
     private Animator animator;
     private GameObject bluePuzzle;
-    public int PlayersCollidingWithButton;
+    public int PlayersCollidingWithButtons;
 
     void Start()
     {
@@ -27,17 +27,17 @@ public class PuzzlesController : MonoBehaviour {
         animator.SetBool("BlueDown", isDown);
     }
 
-    public void AddPlayerCollidingWithButton(int ammount)
+    public void AddPlayersCollidingWithButtons(int ammount)
     {
         // TODO move it to 2 functions for SOLID
-        int OldPlayersCollidingWithButton = PlayersCollidingWithButton;
-        PlayersCollidingWithButton += ammount;
+        int OldPlayersCollidingWithButton = PlayersCollidingWithButtons;
+        PlayersCollidingWithButtons += ammount;
 
-        if (PlayersCollidingWithButton == 0 && OldPlayersCollidingWithButton != 0)
+        if (PlayersCollidingWithButtons == 0 && OldPlayersCollidingWithButton != 0)
         {
             MoveBlue(false);
         }
-        else if (PlayersCollidingWithButton != 0 && OldPlayersCollidingWithButton == 0)
+        else if (PlayersCollidingWithButtons != 0 && OldPlayersCollidingWithButton == 0)
         {
             MoveBlue(true);
         }

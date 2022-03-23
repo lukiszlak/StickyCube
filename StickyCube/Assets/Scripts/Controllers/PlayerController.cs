@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
 
     private string lastMove;
     private bool recentlyMoved = false;
+    private bool reverted = false;
     private GameObject pivot_1; 
     private GameObject pivot_2; 
     private PuzzlesController puzzleController;
@@ -37,13 +38,18 @@ public class PlayerController : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         collidingObjects.Add(other.transform);
+
+        if (other.transform.tag == "Blue" && reverted == false)
+        {
+            puzzleController.AddPlayersCollidingWithButtons(1);
+        }    
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.transform.tag == "Blue")
         {
-            puzzleController.AddPlayerCollidingWithButton(-1);
+            puzzleController.AddPlayersCollidingWithButtons(-1);
         }
     }
 
@@ -99,6 +105,7 @@ public class PlayerController : MonoBehaviour {
     { 
         var currentRot = transform.rotation;
         lastMove = direction;
+        reverted = false;
 
         BoundsGenerate();
 
@@ -160,6 +167,7 @@ public class PlayerController : MonoBehaviour {
             MoveToPosition("A");
         }
         //TODO Dodaj prawidłowy dźwięk przy anulowaniu
+        reverted = true;
         failSound.Play();
     }
 
