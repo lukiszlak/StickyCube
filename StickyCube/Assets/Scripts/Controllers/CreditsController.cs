@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Credits_Controller : MonoBehaviour {
+public class CreditsController : MonoBehaviour {
 
     public GameObject mainMenu;
-    public GameObject creditsObject;
-    //public GameObject creditsSong;
+    public GameObject creditsMenu;
 
     public Rigidbody2D rb;
 
@@ -26,16 +25,14 @@ public class Credits_Controller : MonoBehaviour {
     public void CreditsStart()
     {
         mainMenu.SetActive(false);
-        //creditsSong.SetActive(true);
-        creditsObject.SetActive(true);
+        creditsMenu.SetActive(true);
         rb.velocity = Vector2.up * 80;
     }
 
     public void CreditsStop()
     {
         mainMenu.SetActive(true);
-        //creditsSong.SetActive(false);
-        creditsObject.SetActive(false);
+        creditsMenu.SetActive(false);
         rb.velocity = new Vector2(0, 0);
         transform.position = new Vector2(transform.position.x, -478);
     }
