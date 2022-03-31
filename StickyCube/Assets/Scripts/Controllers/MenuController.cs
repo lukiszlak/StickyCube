@@ -4,6 +4,7 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class MenuController : MonoBehaviour {
 
@@ -15,7 +16,7 @@ public class MenuController : MonoBehaviour {
     {
         if (SceneManager.GetActiveScene().name != "MainMenu")
         {
-            Text levelDisplay = GameObject.Find("LevelName").GetComponent<Text>();
+            TextMeshProUGUI levelDisplay = GameObject.Find("LevelName").GetComponent<TextMeshProUGUI>();
             levelDisplay.text = SceneManager.GetActiveScene().name; // TODO check if It's not started every level, if yes then we can save active scene name to a variable
             levelEndScreen = GameObject.Find("LevelEnd");
             controlButtons = GameObject.Find("Controls");

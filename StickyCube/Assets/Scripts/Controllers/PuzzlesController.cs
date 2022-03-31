@@ -7,6 +7,7 @@ public class PuzzlesController : MonoBehaviour {
     private Animator animator;
     private GameObject bluePuzzle;
     public int PlayersCollidingWithButtons;
+    public bool ButtonOnPush;
 
     void Start()
     {
@@ -31,7 +32,14 @@ public class PuzzlesController : MonoBehaviour {
     {
         // TODO move it to 2 functions for SOLID
         int OldPlayersCollidingWithButton = PlayersCollidingWithButtons;
-        PlayersCollidingWithButtons += ammount;
+        if (ButtonOnPush == true || (ammount > 0 && PlayersCollidingWithButtons == 0 ))
+        {
+            PlayersCollidingWithButtons += ammount;
+        }
+        else if (ButtonOnPush == false && ammount > 0 && PlayersCollidingWithButtons > 0)
+        {
+            PlayersCollidingWithButtons -= ammount;
+        }
 
         if (PlayersCollidingWithButtons == 0 && OldPlayersCollidingWithButton != 0)
         {

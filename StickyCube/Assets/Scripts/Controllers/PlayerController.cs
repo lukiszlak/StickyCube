@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public float moveTime;
+    public int MaxMovementIndex = 20;
     public AudioSource failSound;
 
     private string lastMove;
+    private string currentDirection;
     private bool recentlyMoved = false;
     private bool reverted = false;
+    private bool IsMoving = false;
+    private int MovementIndex = -1;
     private GameObject pivot_1; 
-    private GameObject pivot_2; 
+    private GameObject pivot_2;
+    private Transform background;
     private PuzzlesController puzzleController;
     private List<Transform> collidingObjects;
 
@@ -20,19 +24,26 @@ public class PlayerController : MonoBehaviour {
         collidingObjects = new List<Transform>();
         pivot_1 = gameObject.transform.Find("pivot1").gameObject;
         pivot_2 = gameObject.transform.Find("pivot2").gameObject;
-        puzzleController = GameObject.Find("Background").GetComponent<PuzzlesController>();
+        background = GameObject.Find("Background").transform;
+        puzzleController = background.GetComponent<PuzzlesController>();
         BoundsGenerate();
     }
 
     private void Update()
     {
-        if (collidingObjects.Count > 0 && recentlyMoved)
+        if (IsMoving)
+        {
+            RotatePlayer();
+        }
+        else if (collidingObjects.Count > 0 && recentlyMoved)
         {
             AddCubes();
             recentlyMoved = false;
         }
-
-        collidingObjects.Clear();
+        else
+        {
+            collidingObjects.Clear(); 
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -70,7 +81,7 @@ public class PlayerController : MonoBehaviour {
             {
                 collidingObjectTransform = collidingObject;
                 isCollidingWithGlue = true;
-                break;
+                //break;
             }
         }
 
@@ -78,7 +89,7 @@ public class PlayerController : MonoBehaviour {
         {
             MoveRevert();
         }
-        else if (isCollidingWithGlue && collidingObjectTransform)
+        else if (isCollidingWithGlue && collidingObjectTransform && IsMoving == false)
         {
             GameObject parentGameObject = collidingObjectTransform.parent.gameObject;
             int childCount = parentGameObject.transform.childCount;
@@ -102,50 +113,24 @@ public class PlayerController : MonoBehaviour {
 
     //Moves and rotates the position of the figure
     public void MoveToPosition(string direction)
-    { 
-        var currentRot = transform.rotation;
-        lastMove = direction;
-        reverted = false;
-
-        BoundsGenerate();
-
-        switch (direction)
+    {
+        if (IsMoving == true)
         {
-            //Checks which direction to move
-            case "W":
-                transform.RotateAround(pivot_1.transform.position, Vector3.right, 90);
-                break;
-            case "S":
-                transform.RotateAround(pivot_2.transform.position, Vector3.left, 90);
-                break;
-            case "A":
-                transform.RotateAround(pivot_2.transform.position, Vector3.forward, 90);
-                break;
-            case "D":
-                transform.RotateAround(pivot_1.transform.position, Vector3.back, 90);
-                break;
+            return;
         }
-
-        BoundsGenerate();
-
-        foreach (Transform child in transform)
+        else if (CanPlayerMoveToPosition(direction))
         {
-            if (child.CompareTag("Player"))
-            {
-                RaycastHit hit;
-                if (Physics.Raycast(child.position, Vector3.down * 2, out hit, 2, 1 << 8))
-                {
-                    if (hit.collider.CompareTag("Respawn"))
-                    { 
-                        MoveRevert();
-                        return;
-                    }
-                }
-            }
+            var currentRot = transform.rotation;
+            currentDirection = direction;
+            lastMove = direction;
+            reverted = false;
+            IsMoving = true;
+            BoundsGenerate();
         }
-
-        CheckCollisionWithButton();
-        recentlyMoved = true;
+        else
+        {
+            failSound.Play();
+        }
     }
 
     public void MoveRevert()
@@ -168,7 +153,54 @@ public class PlayerController : MonoBehaviour {
         }
         //TODO Dodaj prawidłowy dźwięk przy anulowaniu
         reverted = true;
+        IsMoving = true;
         failSound.Play();
+    }
+
+    private void RotatePlayer()
+    {
+        switch (currentDirection)
+        {
+            //Checks which direction to move
+            case "W":
+                transform.RotateAround(pivot_1.transform.position, Vector3.right, 90 / MaxMovementIndex);
+                break;
+            case "S":
+                transform.RotateAround(pivot_2.transform.position, Vector3.left, 90 / MaxMovementIndex);
+                break;
+            case "A":
+                transform.RotateAround(pivot_2.transform.position, Vector3.forward, 90 / MaxMovementIndex);
+                break;
+            case "D":
+                transform.RotateAround(pivot_1.transform.position, Vector3.back, 90 / MaxMovementIndex);
+                break;
+        }
+
+        MovementIndex++;
+
+        if (MovementIndex >= MaxMovementIndex)
+        {
+            foreach (Transform child in transform)
+            {
+                if (child.CompareTag("Player"))
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(child.position, Vector3.down * 2, out hit, 2, 1 << 8))
+                    {
+                        if (hit.collider.CompareTag("Respawn"))
+                        {
+                            MoveRevert();
+                            return;
+                        }
+                    }
+                }
+            }
+
+            CheckCollisionWithButton();
+            MovementIndex = 0;
+            recentlyMoved = true;
+            IsMoving = false;
+        }
     }
 
     // Uncomment when we will need Debug gizmos
@@ -215,6 +247,50 @@ public class PlayerController : MonoBehaviour {
     }
 
     ///// Debug Functions
+
+    private bool CanPlayerMoveToPosition(string direction) // TODO change name of destination to offset or something like that, change direction to enum
+    {
+        Vector3 movementOffset = Vector3.zero;
+
+        switch (direction)
+        {
+            case "W":
+                movementOffset = Vector3.forward;
+                break;
+            case "A":
+                movementOffset = Vector3.left;
+                break;
+            case "S":
+                movementOffset = Vector3.back;
+                break;
+            case "D":
+                movementOffset = Vector3.right;
+                break;
+
+        }
+
+        foreach (Transform child in transform)
+        {
+            if (child.tag == "Player")
+            {
+                if (background.position.y + 1.5f < child.position.y)
+                {
+                    movementOffset += movementOffset;
+                }
+
+                RaycastHit hit;
+                if (Physics.Raycast(child.position + movementOffset, Vector3.down * 2, out hit, 4, 1 << 8))
+                {
+                    if (hit.collider.CompareTag("Respawn"))
+                    {
+                        return false;
+                    }
+                }  
+            }
+        }
+        
+        return true;
+    }
 
     public void DetachGlueFigure()
     {
