@@ -69,10 +69,10 @@ EditorBuildSettings:
     path: Assets/Levels/SecondWorld/2.09.unity
     guid: 72b15e87356f79f4a8e1757ad49a9e51
   - enabled: 1
-    path: Assets/Levels/temp/2PlayersGameMode/TwoPC_1.unity
+    path: Assets/Levels/TwoPlayers/TwoPC_1.unity
     guid: c129c5227e7fe90439fe0855d528b09e
   - enabled: 1
-    path: Assets/Levels/temp/2PlayersGameMode/TwoPC_2.unity
+    path: Assets/Levels/TwoPlayers/TwoPC_2.unity
     guid: feac443aad00a964fa0bd9f557aab559
   - enabled: 1
     path: Assets/Levels/1.12.unity

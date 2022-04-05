@@ -105,7 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4376702568831744}
   - component: {fileID: 54518506600323684}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GlueFigure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,7 +119,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1673334842507622}
-  m_LocalRotation: {x: -0, y: -0.70710665, z: -0, w: 0.70710695}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.48, y: 1.7411691, z: 0.92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 33402467025601178}
   - component: {fileID: 65287669347476828}
   - component: {fileID: 23030674367886120}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GlueBox
   m_TagString: Background
   m_Icon: {fileID: 0}
