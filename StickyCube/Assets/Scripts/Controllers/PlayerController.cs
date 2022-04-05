@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public int MaxMovementIndex = 20;
     public AudioSource failSound;
 
     private string lastMove;
@@ -12,7 +11,8 @@ public class PlayerController : MonoBehaviour {
     private bool recentlyMoved = false;
     private bool reverted = false;
     private bool IsMoving = false;
-    private int MovementIndex = -1;
+    private int MovementIndex = 0;
+    private int MaxMovementIndex = 90;
     private GameObject pivot_1; 
     private GameObject pivot_2;
     private Transform background;
@@ -72,12 +72,7 @@ public class PlayerController : MonoBehaviour {
 
         foreach (Transform collidingObject in collidingObjects)
         {
-            if (collidingObject.tag == "Background")
-            {
-                isCollidingWithCube = true;
-                break;
-            }
-            else if (collidingObject.tag == "GlueYellow")
+            if (collidingObject.tag == "GlueYellow")
             {
                 collidingObjectTransform = collidingObject;
                 isCollidingWithGlue = true;
@@ -85,11 +80,7 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
-        if (isCollidingWithCube)
-        {
-            MoveRevert();
-        }
-        else if (isCollidingWithGlue && collidingObjectTransform && IsMoving == false)
+        if (isCollidingWithGlue && collidingObjectTransform && IsMoving == false)
         {
             GameObject parentGameObject = collidingObjectTransform.parent.gameObject;
             int childCount = parentGameObject.transform.childCount;
@@ -163,16 +154,16 @@ public class PlayerController : MonoBehaviour {
         {
             //Checks which direction to move
             case "W":
-                transform.RotateAround(pivot_1.transform.position, Vector3.right, 90 / MaxMovementIndex);
+                transform.RotateAround(pivot_1.transform.position, Vector3.right, 90 / (MaxMovementIndex));
                 break;
             case "S":
-                transform.RotateAround(pivot_2.transform.position, Vector3.left, 90 / MaxMovementIndex);
+                transform.RotateAround(pivot_2.transform.position, Vector3.left, 90 / (MaxMovementIndex));
                 break;
             case "A":
-                transform.RotateAround(pivot_2.transform.position, Vector3.forward, 90 / MaxMovementIndex);
+                transform.RotateAround(pivot_2.transform.position, Vector3.forward, 90 / (MaxMovementIndex));
                 break;
             case "D":
-                transform.RotateAround(pivot_1.transform.position, Vector3.back, 90 / MaxMovementIndex);
+                transform.RotateAround(pivot_1.transform.position, Vector3.back, 90 / (MaxMovementIndex));
                 break;
         }
 
@@ -180,22 +171,6 @@ public class PlayerController : MonoBehaviour {
 
         if (MovementIndex >= MaxMovementIndex)
         {
-            foreach (Transform child in transform)
-            {
-                if (child.CompareTag("Player"))
-                {
-                    RaycastHit hit;
-                    if (Physics.Raycast(child.position, Vector3.down * 2, out hit, 2, 1 << 8))
-                    {
-                        if (hit.collider.CompareTag("Respawn"))
-                        {
-                            MoveRevert();
-                            return;
-                        }
-                    }
-                }
-            }
-
             CheckCollisionWithButton();
             MovementIndex = 0;
             recentlyMoved = true;
@@ -246,8 +221,6 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    ///// Debug Functions
-
     private bool CanPlayerMoveToPosition(string direction) // TODO change name of destination to offset or something like that, change direction to enum
     {
         Vector3 movementOffset = Vector3.zero;
@@ -271,19 +244,28 @@ public class PlayerController : MonoBehaviour {
 
         foreach (Transform child in transform)
         {
+            int offsetMultiplier = 1;
             if (child.tag == "Player")
             {
                 if (background.position.y + 1.5f < child.position.y)
                 {
-                    movementOffset += movementOffset;
+                    offsetMultiplier = 2;
                 }
 
+                Vector3 cubeNewPosition = child.position + (movementOffset * offsetMultiplier) + Vector3.up;
+
                 RaycastHit hit;
-                if (Physics.Raycast(child.position + movementOffset, Vector3.down * 2, out hit, 4, 1 << 8))
+
+                if (Physics.Raycast(cubeNewPosition, Vector3.down, out hit, 4, 1 << 8))
                 {
-                    if (hit.collider.CompareTag("Respawn"))
+                    Debug.DrawRay(cubeNewPosition, Vector3.down, Color.red, 1.0f);
+                    if (hit.collider.CompareTag("Respawn") || hit.transform.name == "GlueFigure" || (hit.transform.parent.name == "BluePuzzle" && !puzzleController.IsBlueDown()))
                     {
                         return false;
+                    }
+                    else if (hit.transform.parent.name == "BluePuzzle")
+                    {
+
                     }
                 }  
             }
@@ -291,6 +273,8 @@ public class PlayerController : MonoBehaviour {
         
         return true;
     }
+
+    ///// Debug Functions
 
     public void DetachGlueFigure()
     {
