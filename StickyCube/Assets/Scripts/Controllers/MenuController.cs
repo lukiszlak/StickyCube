@@ -14,7 +14,8 @@ public class MenuController : MonoBehaviour {
 
     private void Awake()
     {
-        if (SceneManager.GetActiveScene().name != "MainMenu")
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName != "MainMenu" && sceneName != "1.12")
         {
             TextMeshProUGUI levelDisplay = GameObject.Find("LevelName").GetComponent<TextMeshProUGUI>();
             levelDisplay.text = SceneManager.GetActiveScene().name; // TODO check if It's not started every level, if yes then we can save active scene name to a variable
