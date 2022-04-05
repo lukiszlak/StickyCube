@@ -49,26 +49,27 @@ public class PlayersManager : MonoBehaviour {
         // TODO change it to something more sensible
         if (Input.GetKeyDown(KeyCode.W))
         {
-            Move("W");
+            Move(Vector3.forward);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            Move("S");
+            Move(Vector3.back);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            Move("A");
+            Move(Vector3.left);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            Move("D");
+            Move(Vector3.right);
         }
         //
-
-        if (Input.anyKeyDown)
-        {
-            Move(Input.inputString);
-        }
+        
+        // TODO check if we need this
+        //if (Input.anyKeyDown)
+        //{
+        //    Move(Input.inputString);
+        //}
 
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -97,13 +98,9 @@ public class PlayersManager : MonoBehaviour {
         //GameObject.Find("Up").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("W");});
     }
 
-    public void Move(string keyPressed)
+    public void Move(Vector3 keyPressed)
     {
-        if (keyPressed == "W" || keyPressed == "S" || keyPressed == "A" || keyPressed == "D")
-        {
             players[currentPlayerNumber].MoveToPosition(keyPressed);
-        }
-
     }
 
     public void ChangePlayer()

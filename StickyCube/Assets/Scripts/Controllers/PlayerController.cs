@@ -6,15 +6,15 @@ public class PlayerController : MonoBehaviour {
 
     public AudioSource failSound;
 
-    private string lastMove;
-    private string currentDirection;
+    private Vector3 lastMove;
+    private Vector3 currentDirection;
     private bool recentlyMoved = false;
     private bool reverted = false;
     private bool IsMoving = false;
     private int MovementIndex = 0;
     private int MaxMovementIndex = 90;
-    private GameObject pivot_1; 
-    private GameObject pivot_2;
+    private Transform pivot_1; 
+    private Transform pivot_2;
     private Transform background;
     private PuzzlesController puzzleController;
     private List<Transform> collidingObjects;
@@ -22,8 +22,8 @@ public class PlayerController : MonoBehaviour {
     private void Start()
     {
         collidingObjects = new List<Transform>();
-        pivot_1 = gameObject.transform.Find("pivot1").gameObject;
-        pivot_2 = gameObject.transform.Find("pivot2").gameObject;
+        pivot_1 = gameObject.transform.Find("pivot1").gameObject.transform;
+        pivot_2 = gameObject.transform.Find("pivot2").gameObject.transform;
         background = GameObject.Find("Background").transform;
         puzzleController = background.GetComponent<PuzzlesController>();
         BoundsGenerate();
@@ -66,44 +66,34 @@ public class PlayerController : MonoBehaviour {
 
     private void AddCubes()
     {
-        bool isCollidingWithCube = false;
-        bool isCollidingWithGlue = false;
-        Transform collidingObjectTransform = null;
-
         foreach (Transform collidingObject in collidingObjects)
         {
-            if (collidingObject.tag == "GlueYellow")
+            if (collidingObject.tag == "GlueYellow" && collidingObject && IsMoving == false)
             {
-                collidingObjectTransform = collidingObject;
-                isCollidingWithGlue = true;
-                //break;
-            }
-        }
+                GameObject parentGameObject = collidingObject.parent.gameObject;
+                int childCount = parentGameObject.transform.childCount;
 
-        if (isCollidingWithGlue && collidingObjectTransform && IsMoving == false)
-        {
-            GameObject parentGameObject = collidingObjectTransform.parent.gameObject;
-            int childCount = parentGameObject.transform.childCount;
-
-            for (int i = 0; i < childCount; i++)
-            {
-                Transform currentChild = parentGameObject.transform.GetChild(0);
-
-                if (currentChild.CompareTag("Background"))
+                for (int i = 0; i < childCount; i++)
                 {
-                    currentChild.tag = "Player";
-                    currentChild.GetComponent<Collider>().isTrigger = false;
+                    Transform currentChild = parentGameObject.transform.GetChild(0);
+
+                    if (currentChild.CompareTag("Background"))
+                    {
+                        currentChild.tag = "Player";
+                        currentChild.GetComponent<Collider>().isTrigger = false;
+                    }
+
+                    currentChild.transform.parent = transform;
                 }
 
-                currentChild.transform.parent = transform;
+                Destroy(parentGameObject);
             }
-
-            Destroy(parentGameObject);
         }
+
     }
 
     //Moves and rotates the position of the figure
-    public void MoveToPosition(string direction)
+    public void MoveToPosition(Vector3 direction)
     {
         if (IsMoving == true)
         {
@@ -124,48 +114,22 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void MoveRevert()
-    {
-        if (lastMove == "W")
-        {
-            MoveToPosition("S");
-        }
-        else if (lastMove == "S")
-        {
-            MoveToPosition("W");
-        }
-        else if (lastMove == "A")
-        {
-            MoveToPosition("D");
-        }
-        else if (lastMove == "D")
-        {
-            MoveToPosition("A");
-        }
-        //TODO Dodaj prawidłowy dźwięk przy anulowaniu
-        reverted = true;
-        IsMoving = true;
-        failSound.Play();
-    }
-
     private void RotatePlayer()
     {
-        switch (currentDirection)
+        Vector3 ConvertedRotation = new Vector3(currentDirection.z, 0, -currentDirection.x);
+        Vector3 currentPivotPosition;
+
+        if (ConvertedRotation.x > 0 || ConvertedRotation.z < 0)
         {
-            //Checks which direction to move
-            case "W":
-                transform.RotateAround(pivot_1.transform.position, Vector3.right, 90 / (MaxMovementIndex));
-                break;
-            case "S":
-                transform.RotateAround(pivot_2.transform.position, Vector3.left, 90 / (MaxMovementIndex));
-                break;
-            case "A":
-                transform.RotateAround(pivot_2.transform.position, Vector3.forward, 90 / (MaxMovementIndex));
-                break;
-            case "D":
-                transform.RotateAround(pivot_1.transform.position, Vector3.back, 90 / (MaxMovementIndex));
-                break;
+            currentPivotPosition = pivot_1.position;
         }
+        else
+        {
+            currentPivotPosition = pivot_2.position;
+        }
+
+
+        transform.RotateAround(currentPivotPosition, ConvertedRotation, 90 / (MaxMovementIndex));
 
         MovementIndex++;
 
@@ -196,8 +160,8 @@ public class PlayerController : MonoBehaviour {
             }
 
         }
-        pivot_1.transform.position = new Vector3(Mathf.Round(bounds.max.x), Mathf.Round(bounds.min.y), Mathf.Round(bounds.max.z));
-        pivot_2.transform.position = new Vector3(Mathf.Round(bounds.min.x), Mathf.Round(bounds.min.y), Mathf.Round(bounds.min.z));
+        pivot_1.position = new Vector3(Mathf.Round(bounds.max.x), Mathf.Round(bounds.min.y), Mathf.Round(bounds.max.z));
+        pivot_2.position = new Vector3(Mathf.Round(bounds.min.x), Mathf.Round(bounds.min.y), Mathf.Round(bounds.min.z));
     }
 
     public void CheckCollisionWithButton()
@@ -221,27 +185,8 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private bool CanPlayerMoveToPosition(string direction) // TODO change name of destination to offset or something like that, change direction to enum
+    private bool CanPlayerMoveToPosition(Vector3 direction) // TODO change name of destination to offset or something like that, change direction to enum
     {
-        Vector3 movementOffset = Vector3.zero;
-
-        switch (direction)
-        {
-            case "W":
-                movementOffset = Vector3.forward;
-                break;
-            case "A":
-                movementOffset = Vector3.left;
-                break;
-            case "S":
-                movementOffset = Vector3.back;
-                break;
-            case "D":
-                movementOffset = Vector3.right;
-                break;
-
-        }
-
         foreach (Transform child in transform)
         {
             int offsetMultiplier = 1;
@@ -252,7 +197,7 @@ public class PlayerController : MonoBehaviour {
                     offsetMultiplier = 2;
                 }
 
-                Vector3 cubeNewPosition = child.position + (movementOffset * offsetMultiplier) + Vector3.up;
+                Vector3 cubeNewPosition = child.position + (direction * offsetMultiplier) + Vector3.up;
 
                 RaycastHit hit;
 
