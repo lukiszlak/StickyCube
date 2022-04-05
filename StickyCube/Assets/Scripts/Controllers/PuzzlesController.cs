@@ -50,4 +50,9 @@ public class PuzzlesController : MonoBehaviour {
             MoveBlue(true);
         }
     }
+
+    public bool IsBlueDown()
+    {
+        return animator.GetBool("BlueDown");
+    }
 }
