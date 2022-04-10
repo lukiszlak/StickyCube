@@ -13,7 +13,7 @@ public class PlayersManager : MonoBehaviour {
     private PuzzlesController puzzleController;
     private int playerCount = 0; 
     private int currentPlayerNumber = 0;
-    private float cameraTimeHolder; // TODO check if it does anything
+    private float cameraTimeHolder;
     private bool cameraMoving = false;
 
     private void Awake()
@@ -33,7 +33,6 @@ public class PlayersManager : MonoBehaviour {
 
     private void Start()
     {
-        Setup();
         Time.timeScale = 1;
     }
 
@@ -63,13 +62,6 @@ public class PlayersManager : MonoBehaviour {
         {
             Move(Vector3.right);
         }
-        //
-        
-        // TODO check if we need this
-        //if (Input.anyKeyDown)
-        //{
-        //    Move(Input.inputString);
-        //}
 
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -87,15 +79,6 @@ public class PlayersManager : MonoBehaviour {
             Vector3 cameraPositionHolder = camera.transform.position; 
             camera.transform.position = new Vector3(Mathf.Lerp(cameraPositionHolder.x, players[currentPlayerNumber].transform.position.x + 6, cameraTimeToMove), cameraPositionHolder.y, cameraPositionHolder.z);
         }
-    }
-
-    private void Setup()
-    {
-        //TODO Redo this shit it attaches player function to the buttons soo they can move
-        //GameObject.Find("Right").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("D");});
-        //GameObject.Find("Left").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("A");});
-        //GameObject.Find("Down").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("S");});
-        //GameObject.Find("Up").GetComponent<Button>().onClick.AddListener(delegate { GameObject.Find("PlayerContainer").GetComponent<CubeController>().Move("W");});
     }
 
     public void Move(Vector3 keyPressed)

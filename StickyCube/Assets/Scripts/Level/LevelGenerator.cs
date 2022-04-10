@@ -22,20 +22,7 @@ public class LevelGenerator : MonoBehaviour
 
     void Start ()
     {
-
-        // TODO Move it to function called creating grid or something like this
-        for (int i = 0; i < verticalGrid; i++)
-        {
-            for (int j = 0; j < horizontalGrid; j++)
-            {
-                Vector3 moveFromEmpty = new Vector3((transform.position.x + i), transform.position.y, (transform.position.z + j));
-                checker[i, j] = Instantiate(levelTrigger, GameObject.Find("Background/TriggerContainer").transform);
-                checker[i, j].gameObject.name = (i + "_" + j);
-                checker[i, j].transform.position = moveFromEmpty;
-                checker[i, j].GetComponent<LevelCubesScript>().i = i;
-                checker[i, j].GetComponent<LevelCubesScript>().j = j;
-            }
-        }
+        CreateGrid();
     }
 
     private void Update()
@@ -48,6 +35,20 @@ public class LevelGenerator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             deathVolume.SetActive(true);
+        }
+    }
+
+    private void CreateGrid()
+    {
+        for (int i = 0; i < verticalGrid; i++)
+        {
+            for (int j = 0; j < horizontalGrid; j++)
+            {
+                Vector3 checkerPosition = new Vector3((transform.position.x + i), transform.position.y, (transform.position.z + j));
+                checker[i, j] = Instantiate(levelTrigger, checkerPosition, Quaternion.identity, GameObject.Find("Background/TriggerContainer").transform);
+                checker[i, j].gameObject.name = (i + "_" + j);
+                checker[i, j].GetComponent<LevelCubesScript>().SetCoordinates(i, j);
+            }
         }
     }
 

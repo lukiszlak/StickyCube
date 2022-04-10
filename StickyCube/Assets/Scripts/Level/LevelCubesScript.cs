@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class LevelCubesScript : MonoBehaviour
 {
     // TODO check if we can just move this function inside LevelGenerator
-    public int i;
-    public int j;
+    private int i;
+    private int j;
     public LevelGenerator parent;
 
     enum State { EditMode, DeleteMode, PlayMode };
@@ -61,5 +61,11 @@ public class LevelCubesScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void SetCoordinates(int iHolder, int jHolder)
+    {
+        i = iHolder;
+        j = jHolder;
     }
 }

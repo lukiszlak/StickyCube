@@ -11,20 +11,20 @@ public class LevelSave : MonoBehaviour {
 
     public int floorContainerChildCount;
     public GameObject FloorContainer;
-    public PlayerData[] playerData; // TODO check if it does anything
+    //public PlayerData[] playerData; // TODO check if it does anything
     JSONArray levelData;
 
     private float MessageStartingTime = -5.0f;
     private string debugMessage;
 
 
-    [System.Serializable]
-    public class PlayerData
-    {
-        public string name;
-        public int x;
-        public int y;
-    }
+    //[System.Serializable]
+    //public class PlayerData
+    //{
+    //    public string name;
+    //    public int x;
+    //    public int y;
+    //}
 
 	void Awake ()
     {

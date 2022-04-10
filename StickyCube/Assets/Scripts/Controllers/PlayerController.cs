@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private bool CanPlayerMoveToPosition(Vector3 direction) // TODO change name of destination to offset or something like that, change direction to enum
+    private bool CanPlayerMoveToPosition(Vector3 direction)
     {
         foreach (Transform child in transform)
         {

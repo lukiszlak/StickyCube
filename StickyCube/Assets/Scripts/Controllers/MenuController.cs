@@ -18,7 +18,7 @@ public class MenuController : MonoBehaviour {
         if (sceneName != "MainMenu" && sceneName != "1.12")
         {
             TextMeshProUGUI levelDisplay = GameObject.Find("LevelName").GetComponent<TextMeshProUGUI>();
-            levelDisplay.text = SceneManager.GetActiveScene().name; // TODO check if It's not started every level, if yes then we can save active scene name to a variable
+            levelDisplay.text = sceneName;
             levelEndScreen = GameObject.Find("LevelEnd");
             controlButtons = GameObject.Find("Controls");
             restartButtons = GameObject.Find("PauseButtons");
@@ -49,7 +49,6 @@ public class MenuController : MonoBehaviour {
 
     public void NextLevel()
     {
-        //TODO fix this hax
         float level = float.Parse(SceneManager.GetActiveScene().name, new CultureInfo("en-US", false));
         if (level < 1.12f || (level > 2 && level < 2.10))
         {
