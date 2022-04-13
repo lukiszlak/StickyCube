@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class PlayersManager : MonoBehaviour {
    
@@ -15,6 +16,8 @@ public class PlayersManager : MonoBehaviour {
     private int currentPlayerNumber = 0;
     private float cameraTimeHolder;
     private bool cameraMoving = false;
+
+    public enum Direction {Forward, Back, Left, Right };
 
     private void Awake()
     {
@@ -40,33 +43,15 @@ public class PlayersManager : MonoBehaviour {
     {
         Debug.DrawRay(transform.GetChild(currentPlayerNumber).transform.position, Vector3.down, Color.red);
 
-        if (Input.GetKeyDown(KeyCode.I) /*&& figureBoxCount > 1*/)
-        {
-            DetachGlueFigure();
-        }
+        //if (Input.GetKeyDown(KeyCode.I) /*&& figureBoxCount > 1*/)
+        //{
+        //    DetachGlueFigure();
+        //}
 
-        // TODO change it to something more sensible
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            Move(Vector3.forward);
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            Move(Vector3.back);
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            Move(Vector3.left);
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            Move(Vector3.right);
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            ChangePlayer();
-        }
+        //if (Input.GetKeyDown(KeyCode.F))
+        //{
+        //    ChangePlayer();
+        //}
 
         if (cameraMoving)
         {
@@ -81,9 +66,33 @@ public class PlayersManager : MonoBehaviour {
         }
     }
 
-    public void Move(Vector3 keyPressed)
+    public void MovePlayer(InputAction.CallbackContext context)
     {
-            players[currentPlayerNumber].MoveToPosition(keyPressed);
+        if (context.phase == InputActionPhase.Started)
+        {
+            switch (context.action.name)
+            {
+                case "Forward":
+                    Move(Vector3.forward);
+                    break;
+                case "Back":
+                    Move(Vector3.back);
+                    break;
+                case "Left":
+                    Move(Vector3.left);
+                    break;
+                case "Right":
+                    Move(Vector3.right);
+                    break;
+                default:
+                    break;
+            } 
+        }
+    }
+
+    private void Move(Vector3 direction)
+    {
+            players[currentPlayerNumber].MoveToPosition(direction);
     }
 
     public void ChangePlayer()
@@ -142,7 +151,7 @@ public class PlayersManager : MonoBehaviour {
 
     ///// Debug Functions
 
-    private void DetachGlueFigure()
+    public void DetachGlueFigure()
     {
         players[currentPlayerNumber].DetachGlueFigure();
     }
