@@ -3076,6 +3076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   failSound: {fileID: 678603961}
+  rotationTime: 0.24
 --- !u!33 &960019251
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4899,6 +4900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   failSound: {fileID: 678603961}
+  rotationTime: 0.24
 --- !u!33 &1888014565
 MeshFilter:
   m_ObjectHideFlags: 0
