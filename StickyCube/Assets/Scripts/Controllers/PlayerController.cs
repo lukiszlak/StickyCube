@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     public AudioSource failSound;
+    public float rotationTime;
 
     private Vector3 lastMove;
     private Vector3 currentDirection;
@@ -13,6 +14,8 @@ public class PlayerController : MonoBehaviour {
     private bool IsMoving = false;
     private int MovementIndex = 0;
     private int MaxMovementIndex = 90;
+    private float rotationStartingTime;
+    private float oldRotation;
     private Transform pivot_1; 
     private Transform pivot_2;
     private Transform background;
@@ -103,6 +106,8 @@ public class PlayerController : MonoBehaviour {
         {
             var currentRot = transform.rotation;
             currentDirection = direction;
+            rotationStartingTime = Time.time;
+            oldRotation = 0;
             lastMove = direction;
             reverted = false;
             IsMoving = true;
@@ -128,18 +133,26 @@ public class PlayerController : MonoBehaviour {
             currentPivotPosition = pivot_2.position;
         }
 
+        /// TODO refactor it, It was done just to work not to be perfect!
+ 
+        float LerpIndex = (Time.time - rotationStartingTime) / rotationTime;
+        float newRotation = Mathf.Lerp(0.0f, 90.0f, LerpIndex);
+        float rotationStep = newRotation - oldRotation;
+        oldRotation = newRotation;
 
-        transform.RotateAround(currentPivotPosition, ConvertedRotation, 90 / (MaxMovementIndex));
+        transform.RotateAround(currentPivotPosition, ConvertedRotation, rotationStep);
 
-        MovementIndex++;
+        //MovementIndex++;
 
-        if (MovementIndex >= MaxMovementIndex)
+        if (newRotation == 90)
         {
             CheckCollisionWithButton();
             MovementIndex = 0;
             recentlyMoved = true;
             IsMoving = false;
         }
+
+        ///
     }
 
     // Uncomment when we will need Debug gizmos

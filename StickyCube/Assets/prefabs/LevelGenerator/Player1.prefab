@@ -405,8 +405,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0b002dcfacc9fd46bd7d10df3a93c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxMovementIndex: 45
   failSound: {fileID: 82205268921693314}
+  rotationTime: 0.24
 --- !u!54 &54679780596935976
 Rigidbody:
   m_ObjectHideFlags: 0
