@@ -68,7 +68,7 @@ public class PlayersManager : MonoBehaviour {
 
     public void MovePlayer(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started)
+        if (context.phase == InputActionPhase.Performed)
         {
             switch (context.action.name)
             {
@@ -86,7 +86,7 @@ public class PlayersManager : MonoBehaviour {
                     break;
                 default:
                     break;
-            } 
+            }
         }
     }
 
@@ -151,9 +151,12 @@ public class PlayersManager : MonoBehaviour {
 
     ///// Debug Functions
 
-    public void DetachGlueFigure()
+    public void DetachGlueFigure(InputAction.CallbackContext context)
     {
-        players[currentPlayerNumber].DetachGlueFigure();
+        if (context.phase == InputActionPhase.Started)
+        {
+            players[currentPlayerNumber].DetachGlueFigure();
+        }    
     }
 
     /////

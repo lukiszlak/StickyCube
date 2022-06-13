@@ -236,22 +236,37 @@ public class PlayerController : MonoBehaviour {
 
     public void DetachGlueFigure()
     {
-        Transform tempBox = transform.Find("GlueBox");
-        Transform tempGlue = transform.Find("GlueGlue");
-        if (tempBox && tempGlue)
+        if (IsPlayerHorizontall())
         {
-            Transform glueBoxHolder = new GameObject("GlueFigure").transform;
-            glueBoxHolder.position = tempBox.position;
-            tempBox.parent = glueBoxHolder;
-            tempGlue.parent = glueBoxHolder;
-        }
-        else
-        {
-            print("We couldn't detach sticky cube because We couldn't find its children");
-            failSound.Play();
+            Transform tempBox = transform.Find("GlueBox");
+            Transform tempGlue = transform.Find("GlueGlue");
+            if (tempBox && tempGlue)
+            {
+                Transform glueBoxHolder = new GameObject("GlueFigure").transform;
+                glueBoxHolder.position = tempBox.position;
+                tempBox.parent = glueBoxHolder;
+                tempGlue.parent = glueBoxHolder;
+            }
+            else
+            {
+                print("We couldn't detach sticky cube because We couldn't find its children");
+                failSound.Play();
+            } 
         }
     }
-    
+
+    private bool IsPlayerHorizontall()
+    {
+        foreach (Transform child in transform)
+        {
+            if (background.position.y + 1.5f < child.position.y)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /////
 
 }
