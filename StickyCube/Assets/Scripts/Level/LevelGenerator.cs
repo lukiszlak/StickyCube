@@ -40,12 +40,13 @@ public class LevelGenerator : MonoBehaviour
 
     private void CreateGrid()
     {
+        Transform triggerContainer = GameObject.Find("Background/TriggerContainer").transform;
         for (int i = 0; i < verticalGrid; i++)
         {
             for (int j = 0; j < horizontalGrid; j++)
             {
                 Vector3 checkerPosition = new Vector3((transform.position.x + i), transform.position.y, (transform.position.z + j));
-                checker[i, j] = Instantiate(levelTrigger, checkerPosition, Quaternion.identity, GameObject.Find("Background/TriggerContainer").transform);
+                checker[i, j] = Instantiate(levelTrigger, checkerPosition, Quaternion.identity, triggerContainer);
                 checker[i, j].gameObject.name = (i + "_" + j);
                 checker[i, j].GetComponent<LevelCubesScript>().SetCoordinates(i, j);
             }
@@ -70,6 +71,11 @@ public class LevelGenerator : MonoBehaviour
         if (GameObject.Find("Background/FloorContainer/" + i + "_" + j))
         {
             return;
+        }
+        if (checker == null)
+        {
+            checker = new GameObject[verticalGrid, horizontalGrid];
+            CreateGrid();
         }
         Vector3 posHolder = checker[i, j].transform.position;
         GameObject cubeHolder = Instantiate(levelCube, GameObject.Find("Background/FloorContainer").transform);
