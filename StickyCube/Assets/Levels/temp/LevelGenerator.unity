@@ -324,7 +324,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 104.1, y: -151.2}
+  m_AnchoredPosition: {x: 104.1, y: -198.8}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &532936286
@@ -729,8 +729,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "`I` - Detaching Sticky Cube\r\n`F` - Change Player\n\n`1` - PlayMode\r\n`2`
-    - Edit Mode\r (Default)\n`3` - Delete Mode\r"
+  m_Text: "`I` - Detaching Sticky Cube\r\n`F` - Change Player\n`K` - Save Scene\n`L`
+    - Load Scene\n\n`1` - PlayMode\r\n`2` - Edit Mode\r (Default)\n`3` - Delete Mode\r"
 --- !u!222 &1018582159
 CanvasRenderer:
   m_ObjectHideFlags: 0
